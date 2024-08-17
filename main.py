@@ -2,8 +2,9 @@ import pygame, sys
 
 from constants import *
 
-from scripts.utils import load_image
+from scripts.utils import load_image,load_images_from_folder
 from scripts.entities import PhysicsEntity
+from scripts.tilemap import Tilemap
 
 class Game:
     def __init__(self):
@@ -17,18 +18,24 @@ class Game:
         self.movement = [False, False]
 
         self.assets = {
-            'player': load_image('assets/entities/player.png', size=(25, 50)),
+        "decor": load_images_from_folder("tiles/decor", size=(16, 16)),  # Assuming each tile is 16x16 pixels
+        "grass": load_images_from_folder("tiles/grass", size=(16, 16)),
+        "large_decor": load_images_from_folder("tiles/large_decor", size=(16, 16)),
+        "stone": load_images_from_folder("tiles/stone", size=(16, 16)),
+        'player': load_image('assets/entities/player.png', size=(25, 50))
         }
+
+        self.tile_map = Tilemap(self,tile_size=16)
 
         self.collision_area = pygame.Rect(50,50,300, 50)
 
-        self.player = PhysicsEntity(self,'player',(50,50),(8,15))
+        self.player = PhysicsEntity(self,'player',(500,500),(8,15))
 
     def run(self):
         while True:
             self.screen.fill(BLUE_GREEN)
-
-            self.player.update((self.movement[1] - self.movement[0],0)*5)
+            self.tile_map.render(self.screen)
+            self.player.update((self.movement[1] - self.movement[0],0)*10)
             self.player.render(self.screen)
 
 

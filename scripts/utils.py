@@ -17,3 +17,19 @@ def load_image(path, size=None, color_key=BLACK):
         img = pygame.transform.scale(img, size)
     img.set_colorkey(color_key)
     return img
+
+
+def load_images_from_folder(folder, size=None, color_key=BLACK):
+    folder_path = os.path.join(BASE_IMG_PATH, folder)
+    images = {}
+
+    for filename in os.listdir(folder_path):
+        if filename.endswith(".png"):
+            img_path = os.path.join(folder_path, filename)
+            img = pygame.image.load(img_path).convert_alpha()  # Use convert_alpha for images with transparency
+            if size:
+                img = pygame.transform.smoothscale(img, size)
+            img.set_colorkey(color_key)
+            images[os.path.splitext(filename)[0]] = img
+
+    return images
