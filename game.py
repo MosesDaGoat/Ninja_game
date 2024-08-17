@@ -15,7 +15,7 @@ class Game:
 
         self.clock = pygame.time.Clock()
 
-        self.movement = [False, False]
+        self.movement = {"left": False, "right": False, "up": False, "down": False}
 
         self.assets = {
             "decor": load_images_from_folder("tiles/decor", size=(16, 16)),  # Assuming each tile is 16x16 pixels
@@ -35,24 +35,35 @@ class Game:
         while True:
             self.screen.fill(BLUE_GREEN)
             self.tile_map.render(self.screen)
-            self.player.update((self.movement[1] - self.movement[0],0)*10)
+            movement_x = (self.movement["right"] - self.movement["left"]) * 10
+            movement_y = (self.movement["down"] - self.movement["up"]) * 10
+            self.player.update((movement_x, movement_y))
             self.player.render(self.screen)
-
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        self.movement[0] = True
-                    if event.key == pygame.K_RIGHT:
-                        self.movement[1] = True
+                    if event.key == pygame.K_a:
+                        self.movement["left"] = True
+                    if event.key == pygame.K_d:
+                        self.movement["right"] = True
+                    if event.key == pygame.K_w:
+                        self.movement["up"] = True
+                    if event.key == pygame.K_s:
+                        self.movement["down"] = True
+
                 if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_LEFT:
-                        self.movement[0] = False
-                    if event.key == pygame.K_RIGHT:
-                        self.movement[1] = False
+                    if event.key == pygame.K_a:
+                        self.movement["left"] = False
+                    if event.key == pygame.K_d:
+                        self.movement["right"] = False
+                    if event.key == pygame.K_w:
+                        self.movement["up"] = False
+                    if event.key == pygame.K_s:
+                        self.movement["down"] = False
 
             pygame.display.update()
             self.clock.tick(60)
