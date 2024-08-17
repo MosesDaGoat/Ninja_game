@@ -17,7 +17,7 @@ class Game:
         self.movement = [False, False]
 
         self.assets = {
-            'player': load_image('assets/entities/player.png', size=(250, 250)),
+            'player': load_image('assets/entities/player.png', size=(25, 50)),
         }
 
         self.collision_area = pygame.Rect(50,50,300, 50)
