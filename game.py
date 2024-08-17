@@ -31,14 +31,13 @@ class Game:
 
         self.player = PhysicsEntity(self, 'player', (50, 50), (8, 15), speed=0.5, gravity=0.3,max_fall_speed=8)
 
-
     def run(self):
         while True:
             self.screen.fill(BLUE_GREEN)
             self.tile_map.render(self.screen)
             movement_x = (self.movement["right"] - self.movement["left"]) * 10
             movement_y = (self.movement["down"] - self.movement["up"]) * 10
-            self.player.update(self.tile_map,(movement_x, movement_y))
+            self.player.update(self.tile_map, (movement_x, movement_y))
             self.player.render(self.screen)
 
             for event in pygame.event.get():
