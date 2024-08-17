@@ -18,11 +18,11 @@ class Game:
         self.movement = [False, False]
 
         self.assets = {
-        "decor": load_images_from_folder("tiles/decor", size=(16, 16)),  # Assuming each tile is 16x16 pixels
-        "grass": load_images_from_folder("tiles/grass", size=(25,25)),
-        "large_decor": load_images_from_folder("tiles/large_decor", size=(16, 16)),
-        "stone": load_images_from_folder("tiles/stone", size=(25, 25)),
-        'player': load_image('assets/entities/player.png', size=(25, 50))
+            "decor": load_images_from_folder("tiles/decor", size=(16, 16)),  # Assuming each tile is 16x16 pixels
+            "grass": load_images_from_folder("tiles/grass", size=(25,25)),
+            "large_decor": load_images_from_folder("tiles/large_decor", size=(16, 16)),
+            "stone": load_images_from_folder("tiles/stone", size=(25, 25)),
+            'player': load_image('assets/entities/player.png', size=(25, 50))
         }
 
         self.tile_map = Tilemap(self, tile_size=16)
