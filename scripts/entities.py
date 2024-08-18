@@ -1,7 +1,5 @@
 from xml.dom.minidom import Entity
 import pygame
-import pymunk
-import pymunk.pygame_util
 
 class PhysicsEntity:
     def __init__(self, game, e_type, pos, size, speed=5, gravity=0.5, max_fall_speed=10):
@@ -13,14 +11,6 @@ class PhysicsEntity:
         self.speed = speed
         self.gravity = gravity
         self.max_fall_speed = max_fall_speed
-
-    def create_physics_entity(space, pos, size):
-        body = pymunk.Body(1, pymunk.inf)
-        body.position = pos
-        shape = pymunk.Poly.create_box(body, size)
-        shape.friction = 0.5
-        space.add(body, shape)
-        return body
 
     def rect(self):
         return pygame.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])
