@@ -6,6 +6,7 @@ from scripts.utils import load_image,load_images_from_folder
 from scripts.entities import PhysicsEntity
 from scripts.tilemap import Tilemap
 
+
 class Game:
     def __init__(self):
         pygame.init()
