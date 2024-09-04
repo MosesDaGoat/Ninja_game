@@ -3,7 +3,7 @@ import sys
 import pygame
 
 from scripts.tilemap import Tilemap
-from scripts.utils import load_image, load_images ,Animation
+from scripts.utils import load_image, load_images, Animation
 from scripts.entities import PhysicsEntity, Player
 from scripts.clouds import Clouds
 
@@ -16,11 +16,8 @@ class Game:
         self.display = pygame.Surface((320, 240))
 
         self.clock = pygame.time.Clock()
-        
-        # self.img = pygame.image.load('data/images/clouds/cloud_1.png')
-        # self.img.set_colorkey((0, 0, 0))
-        
-        self.img_pos = [160, 260]
+
+
         self.movement = [False, False]
 
         self.assets = {}
@@ -30,9 +27,9 @@ class Game:
             "large_stone": ("tiles/large_decor", True),
             "stone": ("tiles/stone", True),
             "player": ("entities/player.png", False),
-            "background":("background.png",False),
-            "clouds":("clouds",True),
-            "player/idle":Animation(load_images("entities/player/idle"),6),
+            "background": ("background.png", False),  # Background will be resized
+            "clouds": ("clouds", True),
+            "player/idle": Animation(load_images("entities/player/idle"), 6),
             "player/run": Animation(load_images("entities/player/run"), 4),
             "player/jump": Animation(load_images("entities/player/jump")),
             "player/slide": Animation(load_images("entities/player/slide")),
@@ -45,7 +42,14 @@ class Game:
                 if is_folder:
                     self.assets[key] = load_images(path)
                 else:
-                    self.assets[key] = load_image(path)
+                    # Handle background resize
+                    if key == "background":
+                        background_image = load_image(path)
+                        screen_width, screen_height = self.screen.get_size()  # Get the screen dimensions
+                        self.assets[key] = pygame.transform.scale(background_image,
+                                                                  (320, 240))  # Resize
+                    else:
+                        self.assets[key] = load_image(path)
             else:
                 self.assets[key] = value
 

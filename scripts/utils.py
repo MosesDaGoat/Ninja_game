@@ -2,18 +2,23 @@ import os
 
 import pygame
 
-BASE_IMG_PATH = 'data/images/'
+BASE_IMG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../data/images/')
 
 def load_image(path):
-    img = pygame.image.load(BASE_IMG_PATH + path).convert()
+    img = pygame.image.load(os.path.join(BASE_IMG_PATH, path)).convert()
     img.set_colorkey((0, 0, 0))
     return img
 
 def load_images(path):
     images = []
-    for img_name in sorted(os.listdir(BASE_IMG_PATH + path)):
-        images.append(load_image(path + '/' + img_name))
+    full_path = os.path.join(BASE_IMG_PATH, path)
+    try:
+        for img_name in sorted(os.listdir(full_path)):
+            images.append(load_image(os.path.join(path, img_name)))
+    except FileNotFoundError:
+        print(f"Error: The path '{full_path}' does not exist.")
     return images
+
 
 class Animation:
     def __init__(self, images, img_dur =5, loop=True):
