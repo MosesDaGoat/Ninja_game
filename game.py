@@ -3,11 +3,9 @@ import sys
 import pygame
 
 from scripts.tilemap import Tilemap
-
-from scripts.utils import load_image, load_images
-
-from scripts.entities import PhysicsEntity
-
+from scripts.utils import load_image, load_images ,Animation
+from scripts.entities import PhysicsEntity, Player
+from scripts.clouds import Clouds
 
 class Game:
     def __init__(self):
@@ -19,8 +17,8 @@ class Game:
 
         self.clock = pygame.time.Clock()
         
-        self.img = pygame.image.load('data/images/clouds/cloud_1.png')
-        self.img.set_colorkey((0, 0, 0))
+        # self.img = pygame.image.load('data/images/clouds/cloud_1.png')
+        # self.img.set_colorkey((0, 0, 0))
         
         self.img_pos = [160, 260]
         self.movement = [False, False]
@@ -31,29 +29,50 @@ class Game:
             "grass": ("tiles/grass", True),
             "large_stone": ("tiles/large_decor", True),
             "stone": ("tiles/stone", True),
-            "player": ("entities/player.png", False)
+            "player": ("entities/player.png", False),
+            "background":("background.png",False),
+            "clouds":("clouds",True),
+            "player/idle":Animation(load_images("entities/player/idle"),6),
+            "player/run": Animation(load_images("entities/player/run"), 4),
+            "player/jump": Animation(load_images("entities/player/jump")),
+            "player/slide": Animation(load_images("entities/player/slide")),
+            "player/wall_slide": Animation(load_images("entities/player/wall_slide"))
         }
 
-        for key, (path, is_folder) in asset_definitions.items():
-            if is_folder:
-                self.assets[key] = load_images(path)
+        for key, value in asset_definitions.items():
+            if isinstance(value, tuple):
+                path, is_folder = value
+                if is_folder:
+                    self.assets[key] = load_images(path)
+                else:
+                    self.assets[key] = load_image(path)
             else:
-                self.assets[key] = load_image(path)
+                self.assets[key] = value
 
+        self.clouds = Clouds(self.assets["clouds"], count = 16)
 
-
-        self.player = PhysicsEntity(self,"player" ,(50,50),(8,15))
+        self.player = Player(self,(50,50),(8,15))
 
         self.tilemap = Tilemap(self,tile_size=16)
+
+        self.scroll = [0, 0]
         
     def run(self):
         while True:
-            self.display.fill((14, 219, 248))
-            self.tilemap.render(self.display)
+            self.display.blit(self.assets["background"],(0,0))
+
+            self.scroll[0] += (self.player.rect().centerx - self.display.get_width() / 2 - self.scroll[0]) / 30
+            self.scroll[1] += (self.player.rect().centery - self.display.get_height() / 2 - self.scroll[1]) / 30
+            render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
+
+            self.clouds.update()
+            self.clouds.render(self.display, offset = render_scroll)
+
+            self.tilemap.render(self.display, offset = render_scroll)
             #update function
             self.player.update(self.tilemap,(self.movement[1] - self.movement[0],0))
 
-            self.player.render(self.display)
+            self.player.render(self.display, offset = render_scroll)
 
 
             for event in pygame.event.get():
