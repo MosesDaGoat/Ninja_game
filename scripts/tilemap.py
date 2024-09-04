@@ -1,5 +1,5 @@
 import json
-
+import os
 import pygame
 
 AUTOTILE_MAP = {
@@ -41,9 +41,10 @@ class Tilemap:
         f.close()
 
     def load(self, path):
-        f = open(path, 'r')
-        map_data = json.load(f)
-        f.close()
+        # Dynamically get the path based on the script location
+        map_path = os.path.join(os.path.dirname(__file__), path)
+        with open(map_path, 'r') as f:
+            map_data = json.load(f)
 
         self.tilemap = map_data['tilemap']
         self.tile_size = map_data['tile_size']

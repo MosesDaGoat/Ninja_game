@@ -20,15 +20,14 @@ class Game:
 
         self.movement = [False, False]
 
-        self.assets = {}
-        asset_definitions = {
-            "decor": ("tiles/decor", True),
-            "grass": ("tiles/grass", True),
-            "large_stone": ("tiles/large_decor", True),
-            "stone": ("tiles/stone", True),
-            "player": ("entities/player.png", False),
-            "background": ("background.png", False),  # Background will be resized
-            "clouds": ("clouds", True),
+        self.assets = {
+            'decor': load_images('tiles/decor'),
+            'grass': load_images('tiles/grass'),
+            'large_decor': load_images('tiles/large_decor'),
+            'stone': load_images('tiles/stone'),
+            "player": load_image("entities/player.png"),
+            "background": load_image("background.png"),  # Background will be resized
+            "clouds": load_images("clouds"),
             "player/idle": Animation(load_images("entities/player/idle"), 6),
             "player/run": Animation(load_images("entities/player/run"), 4),
             "player/jump": Animation(load_images("entities/player/jump")),
@@ -36,28 +35,12 @@ class Game:
             "player/wall_slide": Animation(load_images("entities/player/wall_slide"))
         }
 
-        for key, value in asset_definitions.items():
-            if isinstance(value, tuple):
-                path, is_folder = value
-                if is_folder:
-                    self.assets[key] = load_images(path)
-                else:
-                    # Handle background resize
-                    if key == "background":
-                        background_image = load_image(path)
-                        screen_width, screen_height = self.screen.get_size()  # Get the screen dimensions
-                        self.assets[key] = pygame.transform.scale(background_image,
-                                                                  (320, 240))  # Resize
-                    else:
-                        self.assets[key] = load_image(path)
-            else:
-                self.assets[key] = value
-
         self.clouds = Clouds(self.assets["clouds"], count = 16)
 
         self.player = Player(self,(50,50),(8,15))
 
         self.tilemap = Tilemap(self,tile_size=16)
+        self.tilemap.load("map.json")
 
         self.scroll = [0, 0]
         
